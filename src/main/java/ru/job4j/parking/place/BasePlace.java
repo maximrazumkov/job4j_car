@@ -1,10 +1,10 @@
 package ru.job4j.parking.place;
 
-public abstract class Place {
+public abstract class BasePlace {
     private final double width;
     private boolean isUsed;
 
-    public Place(double width) {
+    public BasePlace(double width) {
         this.width = width;
     }
 
