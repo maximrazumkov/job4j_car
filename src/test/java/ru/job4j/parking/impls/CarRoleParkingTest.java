@@ -14,18 +14,18 @@ public class CarRoleParkingTest {
 
     @Before
     public void init() {
-        roleParking = new CarRoleParking();
+        roleParking = new CarRoleParking(300);
     }
 
     @Test
     public void whenOkRole() {
-        BaseCar car = new PassengerCar(300);
+        BaseCar car = new PassengerCar(300, "СО589Е");
         assertTrue(roleParking.check(car));
     }
 
     @Test
     public void whenFailRole() {
-        BaseCar car = new PassengerCar(300);
+        BaseCar car = new PassengerCar(350, "СО589Е");
         assertFalse(roleParking.check(car));
     }
 }

@@ -9,9 +9,12 @@ import ru.job4j.car.TruckCar;
 import ru.job4j.parking.interfaces.MethodParking;
 import ru.job4j.parking.interfaces.ParkingService;
 import ru.job4j.parking.interfaces.RoleParking;
+import ru.job4j.parking.place.BasePlace;
+import ru.job4j.parking.place.SimplePlace;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
@@ -23,11 +26,13 @@ public class SimpleParkingServiceTest {
 
     private Map<RoleParking, MethodParking> regulation;
     private ParkingService parkingService;
+    private Map<String, List<BasePlace>> places;
 
     @Before
     public void init() {
         regulation = new HashMap<>();
-        parkingService = new SimpleParkingService(regulation);
+        places = new HashMap<>();
+        parkingService = new SimpleParkingService(regulation, places);
     }
 
     @Test
@@ -35,9 +40,9 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new PassengerCar(300);
+        BaseCar baseCar = new PassengerCar(300, "СО589Е");
         when(carRoleParking.check(baseCar)).thenReturn(true);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(true);
+        when(carMethodParking.park(baseCar, new HashMap<>())).thenReturn(true);
         assertTrue(parkingService.park(baseCar));
     }
 
@@ -46,9 +51,9 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new PassengerCar(300);
+        BaseCar baseCar = new PassengerCar(300, "СО589Е");
         when(carRoleParking.check(baseCar)).thenReturn(false);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(true);
+        when(carMethodParking.park(baseCar, new HashMap<>())).thenReturn(true);
         assertFalse(parkingService.park(baseCar));
     }
 
@@ -57,9 +62,9 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new PassengerCar(300);
+        BaseCar baseCar = new PassengerCar(300, "СО589Е");
         when(carRoleParking.check(baseCar)).thenReturn(true);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(false);
+        when(carMethodParking.park(baseCar, new HashMap<>())).thenReturn(false);
         assertFalse(parkingService.park(baseCar));
     }
 
@@ -68,16 +73,21 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new PassengerCar(300);
+        BaseCar baseCar = new PassengerCar(300, "СО589Е");
+        BasePlace basePlace = new SimplePlace(300);
+        basePlace.setCar(baseCar);
+        List<BasePlace> basePlaces = new ArrayList<>();
+        basePlaces.add(basePlace);
+        places.put("passenger", basePlaces);
+        places.put("passenger", basePlaces);
         when(carRoleParking.check(baseCar)).thenReturn(true);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(true);
-        when(parkingService.park(baseCar)).thenReturn(true);
+        when(carMethodParking.unPark(baseCar, places)).thenReturn(true);
         assertTrue(parkingService.unPark(baseCar));
     }
 
     @Test
     public void whenFailUnParkPassengerParking() {
-        BaseCar baseCar = new PassengerCar(300);
+        BaseCar baseCar = new PassengerCar(300, "СО589Е");
         assertFalse(parkingService.unPark(baseCar));
     }
 
@@ -86,9 +96,9 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new TruckCar(500);
+        BaseCar baseCar = new TruckCar(500, "СО589Е");
         when(carRoleParking.check(baseCar)).thenReturn(true);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(true);
+        when(carMethodParking.park(baseCar, new HashMap<>())).thenReturn(true);
         assertTrue(parkingService.park(baseCar));
     }
 
@@ -97,9 +107,9 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new TruckCar(500);
+        BaseCar baseCar = new TruckCar(500, "СО589Е");
         when(carRoleParking.check(baseCar)).thenReturn(false);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(true);
+        when(carMethodParking.park(baseCar, new HashMap<>())).thenReturn(true);
         assertFalse(parkingService.park(baseCar));
     }
 
@@ -108,9 +118,9 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new TruckCar(500);
+        BaseCar baseCar = new TruckCar(500, "СО589Е");
         when(carRoleParking.check(baseCar)).thenReturn(true);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(false);
+        when(carMethodParking.park(baseCar, new HashMap<>())).thenReturn(false);
         assertFalse(parkingService.park(baseCar));
     }
 
@@ -119,16 +129,20 @@ public class SimpleParkingServiceTest {
         RoleParking carRoleParking = mock(RoleParking.class);
         MethodParking carMethodParking = mock(MethodParking.class);
         regulation.put(carRoleParking, carMethodParking);
-        BaseCar baseCar = new TruckCar(500);
+        BaseCar baseCar = new TruckCar(500, "СО589Е");
+        BasePlace basePlace = new SimplePlace(500);
+        basePlace.setCar(baseCar);
+        List<BasePlace> basePlaces = new ArrayList<>();
+        basePlaces.add(basePlace);
+        places.put("truck", basePlaces);
         when(carRoleParking.check(baseCar)).thenReturn(true);
-        when(carMethodParking.run(baseCar, new ArrayList<>())).thenReturn(true);
-        when(parkingService.park(baseCar)).thenReturn(true);
+        when(carMethodParking.unPark(baseCar, places)).thenReturn(true);
         assertTrue(parkingService.unPark(baseCar));
     }
 
     @Test
     public void whenFailUnParkTruckParking() {
-        BaseCar baseCar = new TruckCar(500);
-        assertTrue(parkingService.unPark(baseCar));
+        BaseCar baseCar = new TruckCar(500, "СО589Е");
+        assertFalse(parkingService.unPark(baseCar));
     }
 }

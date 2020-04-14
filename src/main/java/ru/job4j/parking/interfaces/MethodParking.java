@@ -4,7 +4,9 @@ import ru.job4j.car.BaseCar;
 import ru.job4j.parking.place.BasePlace;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MethodParking {
-    boolean run(BaseCar car, List<BasePlace> places);
+    boolean park(BaseCar car, Map<String, List<BasePlace>> places);
+    boolean unPark(BaseCar car, Map<String, List<BasePlace>> places);
 }

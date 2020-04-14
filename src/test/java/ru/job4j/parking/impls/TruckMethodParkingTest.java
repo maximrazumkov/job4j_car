@@ -9,7 +9,9 @@ import ru.job4j.parking.place.BasePlace;
 import ru.job4j.parking.place.SimplePlace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,52 +19,62 @@ import static org.junit.Assert.assertTrue;
 public class TruckMethodParkingTest {
 
     private MethodParking methodParking;
-    private List<BasePlace> places;
+    private Map<String, List<BasePlace>> places;
 
     @Before
     public void init() {
         methodParking = new TruckMethodParking();
-        places = new ArrayList<>();
+        places = new HashMap<>();
     }
 
     @Test
     public void whenSuccessParkingOnOnePlace() {
-        BaseCar car = new PassengerCar(500);
+        BaseCar car = new PassengerCar(500, "СО589Е");
         SimplePlace place = new SimplePlace(500);
         place.setUsed(false);
-        places.add(place);
-        assertTrue(methodParking.run(car, places));
+        List<BasePlace> basePlaces = new ArrayList<>();
+        basePlaces.add(place);
+        places.put("passenger", basePlaces);
+        assertTrue(methodParking.park(car, places));
     }
 
     @Test
     public void whenSuccessParkingOnSomePlace() {
-        BaseCar car = new PassengerCar(500);
+        BaseCar car = new PassengerCar(500, "СО589Е");
         SimplePlace place1 = new SimplePlace(250);
         SimplePlace place2 = new SimplePlace(250);
         place1.setUsed(false);
         place2.setUsed(false);
-        places.add(place1);
-        places.add(place2);
-        assertTrue(methodParking.run(car, places));
+        List<BasePlace> basePlaces = new ArrayList<>();
+        basePlaces.add(place1);
+        basePlaces.add(place2);
+        places.put("passenger", basePlaces);
+        assertTrue(methodParking.park(car, places));
     }
 
     @Test
     public void whenPlaceUsedFailParking() {
-        BaseCar car = new PassengerCar(500);
+        BaseCar car = new PassengerCar(500, "СО589Е");
         SimplePlace place = new SimplePlace(500);
         place.setUsed(true);
-        assertFalse(methodParking.run(car, places));
+        place.setCar(car);
+        List<BasePlace> basePlaces = new ArrayList<>();
+        basePlaces.add(place);
+        places.put("passenger", basePlaces);
+        assertFalse(methodParking.park(car, places));
     }
 
     @Test
     public void whenSomePlaceUsedFailParking() {
-        BaseCar car = new PassengerCar(500);
+        BaseCar car = new PassengerCar(500, "СО589Е");
         SimplePlace place1 = new SimplePlace(250);
         SimplePlace place2 = new SimplePlace(250);
         place1.setUsed(false);
         place2.setUsed(true);
-        places.add(place1);
-        places.add(place2);
-        assertFalse(methodParking.run(car, places));
+        List<BasePlace> basePlaces = new ArrayList<>();
+        basePlaces.add(place1);
+        basePlaces.add(place2);
+        places.put("passenger", basePlaces);
+        assertFalse(methodParking.park(car, places));
     }
 }

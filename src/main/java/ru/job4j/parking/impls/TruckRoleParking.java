@@ -4,7 +4,13 @@ import ru.job4j.car.BaseCar;
 import ru.job4j.parking.interfaces.RoleParking;
 
 public class TruckRoleParking implements RoleParking {
+    private final double width;
+
+    public TruckRoleParking(double width) {
+        this.width = width;
+    }
+
     public boolean check(BaseCar car) {
-        return false;
+        return  car.getWidth() >= width;
     }
 }
