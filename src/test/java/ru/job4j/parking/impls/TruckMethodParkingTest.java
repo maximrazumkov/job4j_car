@@ -34,7 +34,7 @@ public class TruckMethodParkingTest {
         place.setUsed(false);
         List<BasePlace> basePlaces = new ArrayList<>();
         basePlaces.add(place);
-        places.put("passenger", basePlaces);
+        places.put("truck", basePlaces);
         assertTrue(methodParking.park(car, places));
     }
 
@@ -60,7 +60,7 @@ public class TruckMethodParkingTest {
         place.setCar(car);
         List<BasePlace> basePlaces = new ArrayList<>();
         basePlaces.add(place);
-        places.put("passenger", basePlaces);
+        places.put("truck", basePlaces);
         assertFalse(methodParking.park(car, places));
     }
 
